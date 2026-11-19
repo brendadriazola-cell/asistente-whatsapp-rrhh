@@ -1,0 +1,77 @@
+{
+  "name": "Alertas de error - Asistente WhatsApp",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "001b849c-e489-45b9-b4dd-3899c99d1a7e",
+      "name": "Error Trigger",
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "sendTo": "equipo@nexotalento.example",
+        "subject": "⚠️ Falló el asistente de WhatsApp",
+        "emailType": "text",
+        "message": "=El workflow \"{{ $json.workflow.name }}\" falló.\n\nNodo: {{ $json.execution.lastNodeExecuted }}\nError: {{ $json.execution.error.message }}\nEjecución: {{ $json.execution.url }}\n\nRevisar que el contacto haya recibido respuesta.",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "7af64b0f-c5ab-4e46-9c6c-19da0135e9de",
+      "name": "Avisar falla por Gmail",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        240,
+        0
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "a8Nux4fFeG0Pz7eU",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Manejo de errores técnicos\nSi algo se cae (token de WhatsApp vencido, Google Sheets no responde, falla de OpenAI), este workflow manda un mail al equipo para que nadie se quede sin respuesta.\n\nSe activa desde el workflow principal: Settings → Error workflow.",
+        "width": 520,
+        "height": 200,
+        "color": 3
+      },
+      "id": "4c47490b-ef87-439d-b623-2aa736112474",
+      "name": "Nota de9c",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -60,
+        -240
+      ]
+    }
+  ],
+  "connections": {
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "Avisar falla por Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "tags": []
+}
